@@ -141,11 +141,12 @@ async def track(ctx, handle, track_time = 60):
 
 @bot.command(brief = "Stop tracking someone")
 async def untrack(ctx, handle):
-    if handle not in handles_track:
-        await ctx.send(handle + "not being tracked right now")
-        return
-    handles_track.pop(handle)
-    await ctx.send("Stopped tracking " + handle)
+    for str in handles_track:
+        if str.lower() == handle.lower():
+            handles_track.pop(handle)
+            await ctx.send("Stopped tracking " + handle)
+            return
+    await ctx.send(handle + " not being tracked right now")
 
 @bot.command(brief = "List of usernames being tracked")
 async def tracklist(ctx):
