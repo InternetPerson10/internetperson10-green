@@ -8,9 +8,7 @@ from discord.ext import commands
 
 bot = commands.Bot(command_prefix = "green!")
 
-@bot.event
-async def on_ready():
-    print('This is {0.user}, hello :D'.format(bot))
+handles_track = set()
 
 @bot.command()
 async def test(ctx):
@@ -75,18 +73,36 @@ async def latest(ctx, handle):
             sub["problem"]["name"] +
             ")!", tts = True)
 
-@bot.command()
-async def track(ctx, *args):
-    if len(last_sub_id) >= 5:
+@bot.command(brief = "Track someone on CF")
+async def track(ctx, handle):
+    if len(handles_track) >= 5:
         await ctx.send("Woah hold on I can only track 5 ppl at a time, I'm not a good stalker yet.")
         return
-    handle = args[0]
+    if handle in handles_track:
+        await ctx.send("Already tracking " + handle)
+        return
+    res = await latest(ctx, handle)
+    if res == False:
+        return
+    handles_track.add(handle)
     await ctx.send("Now tracking " + handle + " :eyes:")
-    while True:
+    while handle in handles_track:
         res = await latest(ctx, handle)
         if res == False:
             break
         await asyncio.sleep(10)
+
+@bot.command(brief = "Stop tracking someone")
+async def untrack(ctx, handle):
+    if handle not in handles_track:
+        await ctx.send(handles + "not being tracked right now")
+        return
+    handles_track.remove(handle)
+    await ctx.send("Stopped tracking" + handle)
+
+@bot.event
+async def on_ready():
+    print('This is {0.user}, hello :D'.format(bot))
 
 bot.run('ODc4Mjg1NDA1MzQwOTY2OTMy.YR-9Bg.QV4LuYM45e36FE-4F7uQKlB6rHo')
 # client.run('ODc4Mjg1NDA1MzQwOTY2OTMy.YR-9Bg.QV4LuYM45e36FE-4F7uQKlB6rHo')
