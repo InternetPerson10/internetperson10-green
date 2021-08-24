@@ -6,7 +6,7 @@ import threading
 import asyncio
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix = "green!")
+bot = commands.Bot(command_prefix = ["green!", "g!"])
 
 handles_track = {}
 handles_contest = {}
