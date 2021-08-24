@@ -58,7 +58,7 @@ async def latest(ctx, handle, contest=False):
     last_sub_id[handle] = sub["id"]
 
     if(sub["verdict"] == "OK"):
-        if isinstance(ctx.channel, discord.channel.DMChannel):
+        if contest == True:
             await ctx.send("Accepted! :D " + 
                 str(sub["problem"]["contestId"]) +
                 sub["problem"]["index"] + ", " +
@@ -74,7 +74,7 @@ async def latest(ctx, handle, contest=False):
                 ")!")
 
     else:
-        if isinstance(ctx.channel, discord.channel.DMChannel):
+        if contest == True:
                 await ctx.send((sub["verdict"].replace("_", " ")).capitalize() +
                 " on test " + str(sub["passedTestCount"]+1) + ": " +
                 str(sub["problem"]["contestId"]) +
@@ -93,6 +93,7 @@ async def latest(ctx, handle, contest=False):
                 ")!")
 
 TRACK_TIME = 7200
+LIMIT = 7
 
 @bot.command(brief = "Track someone on CF", description = "Alerts you whenever a submission has finished judging on Codeforces.\nBy default, stops tracking after one hour, but this can be changed.\nUse in DM to enable SERIOUS MODE! Great for virtuals/contests, it features less delay, less clutter, and more useful info.")
 async def track(ctx, handle, track_time = 60):
@@ -101,8 +102,8 @@ async def track(ctx, handle, track_time = 60):
     if not isinstance(track_time, int):
         await ctx.send("Track length must be an integer oops")
         return
-    if len(handles_track) >= 5:
-        await ctx.send("Woah hold on I can only track 5 ppl at a time, I'm not a good stalker yet.")
+    if len(handles_track) >= LIMIT:
+        await ctx.send("Woah hold on I can only track " + str(LIMIT) + " ppl at a time, I'm not a good stalker yet.")
         return
     if handle in handles_track:
         await ctx.send("Already tracking " + handle)
@@ -123,6 +124,11 @@ async def track(ctx, handle, track_time = 60):
     # send
     await ctx.send("Now tracking " + handle + " :eyes:")
 
+    contest = False
+
+    if isinstance(ctx.channel, discord.channel.DMChannel):
+        contest = True
+
     # loop until either untrack or time end
     while (handle in handles_track) and (time.time() < end_time):
         res = await latest(ctx, handle)
@@ -130,9 +136,9 @@ async def track(ctx, handle, track_time = 60):
             handles_track.discard(handle)
             break
         if isinstance(ctx.channel, discord.channel.DMChannel):
-            await asyncio.sleep(3)
+            await asyncio.sleep(4)
         else:
-            await asyncio.sleep(10)
+            await asyncio.sleep(15)
 
     # check if time too long
     if time.time() >= end_time:
@@ -141,12 +147,11 @@ async def track(ctx, handle, track_time = 60):
 
 @bot.command(brief = "Stop tracking someone")
 async def untrack(ctx, handle):
-    for str in handles_track:
-        if str.lower() == handle.lower():
-            handles_track.pop(handle)
-            await ctx.send("Stopped tracking " + handle)
-            return
-    await ctx.send(handle + " not being tracked right now")
+    if handle not in handles_track:
+        await ctx.send(handle + " not being tracked right now")
+        return
+    handles_track.pop(handle)
+    await ctx.send("Stopped tracking " + handle)
 
 @bot.command(brief = "List of usernames being tracked")
 async def tracklist(ctx):
