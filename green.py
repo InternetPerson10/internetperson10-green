@@ -99,7 +99,7 @@ TRACK_TIME = 7200
 LIMIT = 7
 
 @bot.command(brief = "Track someone on CF", description = "Alerts the channel whenever a submission has finished judging on Codeforces.\nBy default, stops tracking after one hour, but this can be changed.\nUse in DM to enable SERIOUS MODE! Great for virtuals/contests, it features less delay, less clutter, and more useful info.")
-async def track(ctx, handle, track_time = 60):
+async def track(ctx, handle, track_time = 180):
 
     handle = str(handle)
     handle = handle.lower()
@@ -165,7 +165,7 @@ async def tracklist(ctx):
     await ctx.send(s)
 
 @bot.command(brief = "Serious tracking for contests/virtuals")
-async def contest(ctx, handle, track_time = 60):
+async def contest(ctx, handle, track_time = 180):
 
     handle = str(handle)
     handle = handle.lower()
