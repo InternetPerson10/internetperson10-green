@@ -25,6 +25,7 @@ async def latest(ctx, handle, contest=False):
 
     if req.status_code != 200:
         await ctx.send("Username not found. Or maybe it's an error, in which case bonk ip10!")
+        await ctx.send("Status code: " + str(req.status_code))
         return False
 
     l = json.loads(req.text)
