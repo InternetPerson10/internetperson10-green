@@ -49,16 +49,18 @@ async def latest(ctx, handle, contest=False):
 
     # if new, don't report
     if handle not in last_sub_id:
+        await ctx.send("Fun sub")
         last_sub_id[handle] = sub["id"]
         return
 
     # if same, don't report
     if last_sub_id[handle] == sub["id"]:
+        await ctx.send("Old sub")
         return
 
     last_sub_id[handle] = sub["id"]
 
-    print("New sub");
+    await ctx.send("New sub")
 
     if(sub["verdict"] == "OK"):
         if contest == True:
