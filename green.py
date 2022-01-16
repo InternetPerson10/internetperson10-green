@@ -24,7 +24,7 @@ async def latest(ctx, handle, contest=False):
     req = requests.get("https://codeforces.com/api/user.status?handle=" + handle + "&count=1")
 
     if req.status_code != 200:
-        await ctx.send("Username not found.")
+        await ctx.send("Some error happened, please bonk ip10")
         return False
 
     l = json.loads(req.text)
