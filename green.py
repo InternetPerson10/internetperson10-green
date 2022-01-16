@@ -24,7 +24,7 @@ async def latest(ctx, handle, contest=False):
     req = requests.get("https://codeforces.com/api/user.status?handle=" + handle + "&count=1")
 
     if req.status_code != 200:
-        await ctx.send("Some error happened, please bonk ip10")
+        await ctx.send("Username not found. Or maybe it's an error, in which case bonk ip10!")
         return False
 
     l = json.loads(req.text)
@@ -133,7 +133,6 @@ async def track(ctx, handle, track_time = 180):
 
     # loop until either untrack or time end
     while (handle in handles_track) and (time.time() < end_time):
-        await ctx.send(handle)
         res = await latest(ctx, handle)
         if res == False:
             handles_track.discard(handle)
