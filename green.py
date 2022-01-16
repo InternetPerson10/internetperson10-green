@@ -57,10 +57,7 @@ async def latest(ctx, handle, contest=False):
     if last_sub_id[handle] == sub["id"]:
         return
 
-    last_sub_id[handle] = sub["id"]
-
-    await ctx.send("New sub! Drumroll please...")
-    
+    last_sub_id[handle] = sub["id"]    
 
     if(sub["verdict"] == "OK"):
         if contest == True:
