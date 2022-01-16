@@ -132,6 +132,7 @@ async def track(ctx, handle, track_time = 180):
 
     # loop until either untrack or time end
     while (handle in handles_track) and (time.time() < end_time):
+        ctx.send(handle)
         res = await latest(ctx, handle)
         if res == False:
             handles_track.discard(handle)
