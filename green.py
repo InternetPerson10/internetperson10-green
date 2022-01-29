@@ -101,7 +101,7 @@ LIMIT = 7
 async def track(ctx, handle, track_time = 180):
 
     handle_orig = str(handle)
-    handle = handle.lower()
+    handle = handle_orig.lower()
 
     # error handling
     if not isinstance(track_time, int):
