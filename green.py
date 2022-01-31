@@ -5,6 +5,7 @@ import json
 import threading
 import asyncio
 from discord.ext import commands
+from random import randint
 
 bot = commands.Bot(command_prefix = ["green!", "g!"])
 
@@ -217,6 +218,15 @@ async def uncontest(ctx, handle):
         return
     handles_contest.pop(handle)
     await ctx.send("Stopped tracking " + handle)
+
+@bot.event
+async def on_message(ctx):
+    if "java" in ctx.content:
+        if randint(1, 5) == 1:
+            await ctx.send("Java nice day lmao gottem")
+    if "hava" in ctx.content:
+        if randint(1, 5) == 1:
+            await ctx.channel.send("Hava nice day lmao gottem")
 
 @bot.event
 async def on_ready():
