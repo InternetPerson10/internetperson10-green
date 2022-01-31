@@ -223,7 +223,7 @@ async def uncontest(ctx, handle):
 async def on_message(ctx):
     if "java" in ctx.content:
         if randint(1, 5) == 1:
-            await ctx.send("Java nice day lmao gottem")
+            await ctx.channel.send("Java nice day lmao gottem")
     if "hava" in ctx.content:
         if randint(1, 5) == 1:
             await ctx.channel.send("Hava nice day lmao gottem")
