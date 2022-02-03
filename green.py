@@ -220,15 +220,6 @@ async def uncontest(ctx, handle):
     await ctx.send("Stopped tracking " + handle)
 
 @bot.event
-async def on_message(ctx):
-    if "java" in ctx.content:
-        if randint(1, 5) == 1:
-            await ctx.channel.send("Java nice day lmao gottem")
-    if "hava" in ctx.content:
-        if randint(1, 5) == 1:
-            await ctx.channel.send("Hava nice day lmao gottem")
-
-@bot.event
 async def on_ready():
     print('This is {0.user}, hello :D'.format(bot))
 
