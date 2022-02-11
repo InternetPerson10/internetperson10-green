@@ -218,6 +218,10 @@ async def uncontest(ctx, handle):
         return
     handles_contest.pop(handle)
     await ctx.send("Stopped tracking " + handle)
+    
+@bot.command(brief = "Get the url to an NUS mod", description = "Because people like saying they are probably going to SU the PP6969 mod (Baterisna, 2021)")
+async def nus(ctx, mod):
+    await ctx.send("https://nusmods.com/modules/" + mod)
 
 @bot.event
 async def on_ready():
