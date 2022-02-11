@@ -221,7 +221,7 @@ async def uncontest(ctx, handle):
     
 @bot.command(brief = "Get the url to an NUS mod", description = "Because people like saying they are probably going to SU the PP6969 mod (Baterisna, 2021)")
 async def nus(ctx, mod):
-    await ctx.send("https://nusmods.com/modules/" + upper(mod))
+    await ctx.send("https://nusmods.com/modules/" + mod.upper())
 
 @bot.event
 async def on_ready():
