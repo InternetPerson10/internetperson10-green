@@ -51,7 +51,6 @@ async def leaderboard(ctx):
         probs.append(prob)
 
     for sub in submissions["result"]:
-        print(sub)
         user = sub["author"]["members"][0]["handle"]
         if user not in board:
             board[user] = {}
