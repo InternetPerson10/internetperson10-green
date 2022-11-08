@@ -14,7 +14,7 @@ bot = commands.Bot(command_prefix = ["green!", "g!"], intents=discord.Intents.al
 
 @bot.command()
 async def test(ctx):
-    await ctx.send("Yay! :D", tts = True)
+    await ctx.send("Yay! :DD")
 
 @bot.command(brief = "Update the leaderboard")
 async def leaderboard(ctx):
@@ -46,6 +46,10 @@ async def leaderboard(ctx):
     time_list = {}
     n = len(scores)
 
+    probs = []
+    for prob in scores:
+        probs.append(prob)
+
     for sub in submissions["result"]:
         print(sub)
         user = sub["author"]["members"][0]["handle"]
@@ -70,14 +74,28 @@ async def leaderboard(ctx):
     leader_board = []
     leader_board.append(["", "Username"])
     for prob in board[user]:
-        leader_board[0].append(prob)
+        if prob[0] == leader_board[0][-1][0]:
+            leader_board[0].pop()
+            leader_board[0].append(prob[0])
+        else:
+            leader_board[0].append(prob[0])
     leader_board[0].append("Total")
+
     for stuff in sort:
         leader_board.append([str(len(leader_board))])
         leader_board[-1].append(stuff[2])
-        for prob in board[user]:
-            leader_board[-1].append(str(board[user][prob]))
+        for i in range(n):
+            prob = probs[i]
+            same = False
+            if i > 0:
+                if probs[i][0] == probs[i-1][0]:
+                    same = True
+            if same:
+                leader_board[-1][-1] += board[user][prob]
+            else:
+                leader_board[-1].append(board[user][prob])
         leader_board[-1].append(str(stuff[0]))
+
     await ctx.send(f"```\n{tabulate.tabulate(leader_board, headers='firstrow', tablefmt='fancy_grid')}```")
 
 handles_track = {}
