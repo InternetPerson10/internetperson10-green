@@ -1,21 +1,87 @@
 import time
+import math
 import discord
 import requests
 import json
 import threading
 import asyncio
+import hashlib
+import collections
+import tabulate
 from discord.ext import commands
-from random import randint
 
 bot = commands.Bot(command_prefix = ["green!", "g!"], intents=discord.Intents.all())
-
-handles_track = {}
-handles_contest = {}
 
 @bot.command()
 async def test(ctx):
     await ctx.send("Yay! :D", tts = True)
 
+@bot.command(brief = "Update the leaderboard")
+async def leaderboard(ctx):
+    ip10_api_key = "1b482fd2ed184b92935c4b6f870729bab3358eb8"
+    ip10_api_secret = "26a753bd3762a7556b7883325e3c29740c692744"
+    s = f"contest.status?apiKey={ip10_api_key}&contestId=409027&time={math.floor(time.time())}"
+    h = hashlib.new("sha512")
+    h.update(f"691337/{s}#{ip10_api_secret}".encode("utf-8"))
+    req = requests.get(f"https://codeforces.com/api/{s}&apiSig=691337{h.hexdigest()}")
+
+    if req.status_code != 200:
+        await ctx.send("Some error has happened. Code " + str(req.status_code))
+        return False
+
+    submissions = json.loads(req.text)
+    # EDIT SCORES HERE
+    scores = collections.OrderedDict({
+        "A": 9,
+        "B": 10,
+        "C": 11,
+        "D": 12,
+        "E": 13,
+        "F1": 4,
+        "F2": 10,
+        "G": 15,
+        "H": 16
+    })
+    board = {}
+    time_list = {}
+    n = len(scores)
+
+    for sub in submissions["result"]:
+        print(sub)
+        user = sub["author"]["members"][0]["handle"]
+        if user not in board:
+            board[user] = {}
+            for problem in scores:
+                board[user][problem] = 0
+            time_list[user] = 0
+        if sub["verdict"] == "OK":
+            problem = sub["problem"]["index"]
+            board[user][problem] = scores[problem]
+            time_list[user] = max(time_list[user], sub["creationTimeSeconds"])
+
+    sort = []
+    for user in board:
+        tot_score = 0
+        for prob in board[user]:
+            tot_score += board[user][prob]
+        sort.append([tot_score, time_list[user], user])
+    sort = sorted(sort)
+
+    leader_board = []
+    leader_board.append(["", "Username"])
+    for prob in board[user]:
+        leader_board[0].append(prob)
+    leader_board[0].append("Total")
+    for stuff in sort:
+        leader_board.append([str(len(leader_board))])
+        leader_board[-1].append(stuff[2])
+        for prob in board[user]:
+            leader_board[-1].append(str(board[user][prob]))
+        leader_board[-1].append(str(stuff[0]))
+    await ctx.send(f"```\n{tabulate.tabulate(leader_board, headers='firstrow', tablefmt='fancy_grid')}```")
+
+handles_track = {}
+handles_contest = {}
 last_sub_id = {}
 
 async def latest(ctx, handle, contest=False):
@@ -25,8 +91,7 @@ async def latest(ctx, handle, contest=False):
     req = requests.get("https://codeforces.com/api/user.status?handle=" + handle + "&count=1")
 
     if req.status_code != 200:
-        await ctx.send("Username not found. Or maybe it's an error, in which case bonk ip10!")
-        await ctx.send("Status code: " + str(req.status_code))
+        await ctx.send("Some error has happened. Code " + str(req.status_code))
         return False
 
     l = json.loads(req.text)
@@ -58,7 +123,9 @@ async def latest(ctx, handle, contest=False):
     if last_sub_id[handle] == sub["id"]:
         return
 
-    last_sub_id[handle] = sub["id"]    
+    last_sub_id[handle] = sub["id"]
+
+    print("New sub");
 
     if(sub["verdict"] == "OK"):
         if contest == True:
@@ -98,11 +165,11 @@ async def latest(ctx, handle, contest=False):
 TRACK_TIME = 7200
 LIMIT = 7
 
-@bot.command(brief = "Track someone on CF", description = "Alerts the channel whenever a submission has finished judging on Codeforces.\nBy default, stops tracking after one hour, but this can be changed.\nUse in DM to enable SERIOUS MODE! Great for virtuals/contests, it features less delay, less clutter, and more useful info.")
-async def track(ctx, handle, track_time = 180):
+# @bot.command(brief = "Track someone on CF", description = "Alerts the channel whenever a submission has finished judging on Codeforces.\nBy default, stops tracking after one hour, but this can be changed.\nUse in DM to enable SERIOUS MODE! Great for virtuals/contests, it features less delay, less clutter, and more useful info.")
+async def track(ctx, handle, track_time = 60):
 
-    handle_orig = str(handle)
-    handle = handle_orig.lower()
+    handle = str(handle)
+    handle = handle.lower()
 
     # error handling
     if not isinstance(track_time, int):
@@ -128,7 +195,7 @@ async def track(ctx, handle, track_time = 180):
     handles_track[handle] = end_time
 
     # send
-    await ctx.send("Now tracking " + handle_orig + " :eyes:")
+    await ctx.send("Now tracking " + handle + " :eyes:")
 
     # loop until either untrack or time end
     while (handle in handles_track) and (time.time() < end_time):
@@ -143,7 +210,7 @@ async def track(ctx, handle, track_time = 180):
         await ctx.send(str(track_time) + " minutes have passed, now untracking " + handle)
         handles_track.pop(handle)
 
-@bot.command(brief = "Stop tracking someone")
+# @bot.command(brief = "Stop tracking someone")
 async def untrack(ctx, handle):
     handle = str(handle)
     handle = handle.lower()
@@ -153,7 +220,7 @@ async def untrack(ctx, handle):
     handles_track.pop(handle)
     await ctx.send("Stopped tracking " + handle)
 
-@bot.command(brief = "List of usernames being tracked")
+# @bot.command(brief = "List of usernames being tracked")
 async def tracklist(ctx):
     if len(handles_track) == 0:
         await ctx.send("Not tracking anyone right now")
@@ -164,8 +231,8 @@ async def tracklist(ctx):
         s = s + "\n" + handle + ": " + str(int(left_time // 60)) + "m" + str(int(left_time % 60)) + "s left"
     await ctx.send(s)
 
-@bot.command(brief = "Serious tracking for contests/virtuals")
-async def contest(ctx, handle, track_time = 180):
+# @bot.command(brief = "Serious tracking for contests/virtuals")
+async def contest(ctx, handle, track_time = 60):
 
     handle = str(handle)
     handle = handle.lower()
@@ -209,7 +276,7 @@ async def contest(ctx, handle, track_time = 180):
         await ctx.send(str(track_time) + " minutes have passed, now untracking " + handle)
         handles_contest.pop(handle)
 
-@bot.command(brief = "Stop tracking someone in contest mode")
+# @bot.command(brief = "Stop tracking someone in contest mode")
 async def uncontest(ctx, handle):
     handle = str(handle)
     handle = handle.lower()
@@ -218,8 +285,8 @@ async def uncontest(ctx, handle):
         return
     handles_contest.pop(handle)
     await ctx.send("Stopped tracking " + handle)
-    
-@bot.command(brief = "Get the url to an NUS mod", description = "Because people like saying they are probably going to SU the PP6969 mod (Baterisna, 2021)")
+
+# @bot.command(brief = "Get the url to an NUS mod", description = "Because people like saying they are probably going to SU the PP6969 mod (Baterisna, 2021)")
 async def nus(ctx, mod):
     await ctx.send("https://nusmods.com/modules/" + mod.upper())
 
