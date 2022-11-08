@@ -1,7 +1,4 @@
 discord
 requests
-json
-threading
-asyncio
 tabulate
 discord.ext
