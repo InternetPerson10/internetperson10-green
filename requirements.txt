@@ -1,2 +1,8 @@
-discord.py
+time
+discord
 requests
+json
+threading
+asyncio
+tabulate
+discord.ext
