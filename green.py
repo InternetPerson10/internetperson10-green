@@ -68,7 +68,7 @@ async def leaderboard(ctx):
         for prob in board[user]:
             tot_score += board[user][prob]
         sort.append([tot_score, time_list[user], user])
-    sort = sorted(sort)
+    sort = sorted(sort, reverse=True)
 
     leader_board = []
     leader_board.append(["", "Username"])
