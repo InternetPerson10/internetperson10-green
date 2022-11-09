@@ -67,24 +67,24 @@ async def leaderboard(ctx):
         tot_score = 0
         for prob in board[user]:
             tot_score += board[user][prob]
-        sort.append([tot_score, time_list[user], user])
+        sorts.append([tot_score, time_list[user], user])
     sorts = sorted(sorts, reverse=True)
+
 
     leader_board = []
     leader_board.append(["", "Username"])
-    for prob in board[user]:
+    for prob in probs:
         if prob[0] == leader_board[0][-1][0]:
             leader_board[0].pop()
-            leader_board[0].append(prob[0])
-        else:
-            leader_board[0].append(prob[0])
+        leader_board[0].append(prob[0])
     leader_board[0].append("Total")
 
     for stuff in sorts:
         if len(leader_board) >= 10:
             break
+        user = stuff[2]
         leader_board.append([str(len(leader_board))])
-        leader_board[-1].append(stuff[2])
+        leader_board[-1].append(user)
         for i in range(n):
             prob = probs[i]
             same = False
