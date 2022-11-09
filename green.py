@@ -81,6 +81,8 @@ async def leaderboard(ctx):
     leader_board[0].append("Total")
 
     for stuff in sort:
+        if len(leader_board) > 10:
+            break
         leader_board.append([str(len(leader_board))])
         leader_board[-1].append(stuff[2])
         for i in range(n):
