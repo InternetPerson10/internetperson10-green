@@ -62,13 +62,13 @@ async def leaderboard(ctx):
             board[user][problem] = scores[problem]
             time_list[user] = max(time_list[user], sub["creationTimeSeconds"])
 
-    sort = []
+    sorts = []
     for user in board:
         tot_score = 0
         for prob in board[user]:
             tot_score += board[user][prob]
         sort.append([tot_score, time_list[user], user])
-    sort = sorted(sort, reverse=True)
+    sorts = sorted(sorts, reverse=True)
 
     leader_board = []
     leader_board.append(["", "Username"])
@@ -80,7 +80,7 @@ async def leaderboard(ctx):
             leader_board[0].append(prob[0])
     leader_board[0].append("Total")
 
-    for stuff in sort:
+    for stuff in sorts:
         if len(leader_board) >= 10:
             break
         leader_board.append([str(len(leader_board))])
