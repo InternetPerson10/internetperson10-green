@@ -104,14 +104,6 @@ async def leaderboard(ctx):
     table = tabulate.tabulate(leader_board, headers='firstrow', tablefmt='fancy_grid')
     test_table = ''.join(ch for ch in table if (ch in keepchars))
     draw.text((0, 0), test_table, font=ImageFont.truetype("Monocraft.otf", 16))
-    data = image.getdata()
-    newData = []
-    for item in data:
-        if item[0] == 0 and item[1] == 0 and item[2] == 0:
-            newData.append((255, 255, 255, 0))
-        else:
-            newData.append(item)
-    image.putdata(newData)
     image.show()
     image.save("leaderboard.png")
     await ctx.send(file=discord.File("leaderboard.png"))
