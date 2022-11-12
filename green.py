@@ -37,8 +37,8 @@ async def leaderboard(ctx):
         "C": 11,
         "D": 12,
         "E": 13,
-        "F1": 4,
-        "F2": 10,
+        "F1": 7,
+        "F2": 7,
         "G": 15,
         "H": 16
     })
@@ -67,7 +67,7 @@ async def leaderboard(ctx):
         tot_score = 0
         for prob in board[user]:
             tot_score += board[user][prob]
-        sorts.append([tot_score, time_list[user], user])
+        sorts.append([tot_score, -time_list[user], user])
     sorts = sorted(sorts, reverse=True)
 
 
