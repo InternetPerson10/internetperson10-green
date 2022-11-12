@@ -9,6 +9,7 @@ import hashlib
 import collections
 import tabulate
 from discord.ext import commands
+from PIL import Image, ImageDraw, ImageFont
 
 bot = commands.Bot(command_prefix = ["green!", "g!"], intents=discord.Intents.all())
 
@@ -80,7 +81,7 @@ async def leaderboard(ctx):
     leader_board[0].append("Total")
 
     for stuff in sorts:
-        if len(leader_board) >= 10:
+        if len(leader_board) >= 16:
             break
         user = stuff[2]
         leader_board.append([str(len(leader_board))])
@@ -97,7 +98,23 @@ async def leaderboard(ctx):
                 leader_board[-1].append(board[user][prob])
         leader_board[-1].append(str(stuff[0]))
 
-    await ctx.send(f"```\n{tabulate.tabulate(leader_board, headers='firstrow', tablefmt='fancy_grid')}```")
+    keepchars = ''.join(c for c in map(chr, range(256)))
+    image = Image.new(mode = "RGBA", size = (800, 610))
+    draw = ImageDraw.Draw(image)
+    table = tabulate.tabulate(leader_board, headers='firstrow', tablefmt='fancy_grid')
+    test_table = ''.join(ch for ch in table if (ch in keepchars))
+    draw.text((0, 0), test_table, font=ImageFont.truetype("Monocraft.otf", 16))
+    data = image.getdata()
+    newData = []
+    for item in data:
+        if item[0] == 0 and item[1] == 0 and item[2] == 0:
+            newData.append((255, 255, 255, 0))
+        else:
+            newData.append(item)
+    image.putdata(newData)
+    image.show()
+    image.save("leaderboard.png")
+    await ctx.send(file=discord.File("leaderboard.png"))
 
 handles_track = {}
 handles_contest = {}
