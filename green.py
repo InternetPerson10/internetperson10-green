@@ -99,7 +99,7 @@ async def leaderboard(ctx):
         leader_board[-1].append(str(stuff[0]))
 
     keepchars = ''.join(c for c in map(chr, range(256)))
-    image = Image.new(mode = "RGBA", size = (800, 610))
+    image = Image.new(mode = "RGB", size = (800, 610))
     draw = ImageDraw.Draw(image)
     table = tabulate.tabulate(leader_board, headers='firstrow', tablefmt='fancy_grid')
     test_table = ''.join(ch for ch in table if (ch in keepchars))
