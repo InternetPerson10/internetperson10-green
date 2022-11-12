@@ -2,3 +2,4 @@ discord
 requests
 tabulate
 discord.py
+PIL
