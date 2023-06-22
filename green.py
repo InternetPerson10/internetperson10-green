@@ -17,6 +17,44 @@ bot = commands.Bot(command_prefix = ["green!", "g!"], intents=discord.Intents.al
 async def test(ctx):
     await ctx.send("Yay! :DD")
 
+belt = {
+    "wantto": ["MAKES ME FEEL DOKO KARA KA"],
+    "kureyo": ["YAMI WO HARATTE"],
+    "weare": ["FIGHTING DREAMERS"],
+    "thesame": ["AM I ONLY DREAAAAAAAAAAMING"],
+    "aaaaa": ["INGONYAAAAAAAAAAAAAAAAAAMA BAGITHI BABAAAAAAA", "ASAHI WA NOBORUUUUUU YEAH"],
+    "theyknow": ["LET IT GOOOO LET IT GOOOOOOOO CANT HOLD IT BACK ANYMOOOOOOOOORE"],
+    "sayonara": ["HIKIKOMORI ZETTAI JUSTICE ORE NO WATASHI DAKE NO ORI NO NAKA DE", "WA KANASHIII KOTOBA JANAIIIIIII"],
+    "sayounara": ["HIKIKOMORI ZETTAI JUSTICE ORE NO WATASHI DAKE NO ORI NO NAKA DE", "WA KANASHIII KOTOBA JANAIIIIIII"],
+    "jibunwo": ["SEKAI SAE MO KAETE SHIMAE SOU NAAAAAA"],
+    "amazing": ["JUST THE WAY YOU AAAAAARE"],
+    "ooooo": ["WE'RE GONNA LIVE LIKE ITS THE END OF THE WORLD", "WAG NA WAG MONG SASABIHIIIIIIIN"],
+    "your": ["LOVE IS LIKE THE SUN THAT LIGHTS UP MY WHOLE WORLD"],
+    "tonight": [
+        "HEEEY HEEEEEEEY HEEEEEEEEY TONIGHT",
+        "WILL BE THE NIGHT THAT I WILL FALL FOR YOU OVER AGAAAAAAAAAIN",
+        "RAISE A GLASS TO FREEEEEEDOOOM"
+    ],
+    "iam": ["FALLING I AM FADING I AM DROWNING HELP ME TO BREAAAAAATHE"],
+    "don": ["TEN NOOO MICHI WO KASA WO WASURETE"],
+    "one": ["NIGHT AND ONE MORE TIIIIME THANKS FOR THE MEMORIES EVEN THOUGH THEY WERENT SO GREAT", "21 GUNS LAY DOWN YOUR AAARMS GIVE UP THE FIIIGHT", "DAAAAY ONE DAAAAY ONE DAAAAAAY"],
+    "letsgo": ["COME ON COME ON ON A JOURNEY"],
+    "flag": ["KOE NO KAGIRI KOE NO KAGIRI KOE NO KAGIRI SAKENDEEEEEE"],
+    "dadalhin": ["KITA SA AKING BAHAY DI TAYO MAGAAWAY AALIS TAYO SA DULO NG MUNDOOOO", "KITA SA AKING PALAAAAASYOOOO"],
+    "nais": ["KONG MAGPAKALASIIIIING"],
+    "ngayon": ["IBA NA ANG IYONG NGITIIII IBA NA ANG IYONG TINGIIIIN"]
+}
+
+@bot.event
+async def on_message(ctx):
+    msg = ctx.content.lower().replace(' ', '')
+    chn = ctx.channel
+    for catch in belt:
+        if msg.endswith(catch):
+            r = random.randrange(0, len(belt[catch]))
+            await ctx.reply(belt[catch][r], mention_author=False)
+    await bot.process_commands(ctx)
+
 @bot.command(brief = "Update the leaderboard")
 async def leaderboard(ctx):
     ip10_api_key = "1b482fd2ed184b92935c4b6f870729bab3358eb8"
@@ -193,7 +231,7 @@ async def latest(ctx, handle, contest=False):
 TRACK_TIME = 7200
 LIMIT = 7
 
-# @bot.command(brief = "Track someone on CF", description = "Alerts the channel whenever a submission has finished judging on Codeforces.\nBy default, stops tracking after one hour, but this can be changed.\nUse in DM to enable SERIOUS MODE! Great for virtuals/contests, it features less delay, less clutter, and more useful info.")
+@bot.command(brief = "Track someone on CF", description = "Alerts the channel whenever a submission has finished judging on Codeforces.\nBy default, stops tracking after one hour, but this can be changed.\nUse in DM to enable SERIOUS MODE! Great for virtuals/contests, it features less delay, less clutter, and more useful info.")
 async def track(ctx, handle, track_time = 60):
 
     handle = str(handle)
@@ -238,7 +276,7 @@ async def track(ctx, handle, track_time = 60):
         await ctx.send(str(track_time) + " minutes have passed, now untracking " + handle)
         handles_track.pop(handle)
 
-# @bot.command(brief = "Stop tracking someone")
+@bot.command(brief = "Stop tracking someone")
 async def untrack(ctx, handle):
     handle = str(handle)
     handle = handle.lower()
@@ -248,7 +286,7 @@ async def untrack(ctx, handle):
     handles_track.pop(handle)
     await ctx.send("Stopped tracking " + handle)
 
-# @bot.command(brief = "List of usernames being tracked")
+@bot.command(brief = "List of usernames being tracked")
 async def tracklist(ctx):
     if len(handles_track) == 0:
         await ctx.send("Not tracking anyone right now")
@@ -259,7 +297,7 @@ async def tracklist(ctx):
         s = s + "\n" + handle + ": " + str(int(left_time // 60)) + "m" + str(int(left_time % 60)) + "s left"
     await ctx.send(s)
 
-# @bot.command(brief = "Serious tracking for contests/virtuals")
+@bot.command(brief = "Serious tracking for contests/virtuals")
 async def contest(ctx, handle, track_time = 60):
 
     handle = str(handle)
@@ -304,7 +342,7 @@ async def contest(ctx, handle, track_time = 60):
         await ctx.send(str(track_time) + " minutes have passed, now untracking " + handle)
         handles_contest.pop(handle)
 
-# @bot.command(brief = "Stop tracking someone in contest mode")
+@bot.command(brief = "Stop tracking someone in contest mode")
 async def uncontest(ctx, handle):
     handle = str(handle)
     handle = handle.lower()
@@ -314,7 +352,7 @@ async def uncontest(ctx, handle):
     handles_contest.pop(handle)
     await ctx.send("Stopped tracking " + handle)
 
-# @bot.command(brief = "Get the url to an NUS mod", description = "Because people like saying they are probably going to SU the PP6969 mod (Baterisna, 2021)")
+@bot.command(brief = "Get the url to an NUS mod", description = "Because people like saying they are probably going to SU the PP6969 mod (Baterisna, 2021)")
 async def nus(ctx, mod):
     await ctx.send("https://nusmods.com/modules/" + mod.upper())
 
