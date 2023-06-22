@@ -8,6 +8,7 @@ import asyncio
 import hashlib
 import collections
 import tabulate
+import random
 from discord.ext import commands
 from PIL import Image, ImageDraw, ImageFont
 
