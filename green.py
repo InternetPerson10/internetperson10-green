@@ -47,13 +47,17 @@ belt = {
     "some": ["BODY ONCE TOLD ME THE WORLD WAS GONNA ROLL ME"]
 }
 
+all_pairs = set()
+
 @bot.event
 async def on_message(ctx):
     msg = ctx.content.lower().replace(' ', '')
     chn = ctx.channel
+    usr = ctx.author.id
     for catch in belt:
-        if msg.endswith(catch):
+        if msg.endswith(catch) and (usr, catch) not in all_pairs:
             r = random.randrange(0, len(belt[catch]))
+            all_pairs.add((usr, catch))
             await ctx.reply(belt[catch][r], mention_author=False)
     await bot.process_commands(ctx)
 
