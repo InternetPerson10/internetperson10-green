@@ -20,6 +20,8 @@ async def test(ctx):
 
 belt = {
     "wantto": ["MAKES ME FEEL DOKO KARA KA"],
+    "makes": ["ME FEEL DOKO KARA KA"],
+    "mefeel": ["DOKO KARA KA"],
     "kureyo": ["YAMI WO HARATTE"],
     "weare": ["FIGHTING DREAMERS"],
     "thesame": ["AM I ONLY DREAAAAAAAAAAMING"],
@@ -54,7 +56,7 @@ async def on_message(ctx):
     chn = ctx.channel
     usr = ctx.author.id
     for catch in belt:
-        if msg.endswith(catch) and (usr, catch) not in all_pairs:
+        if msg.endswith(catch) and ((usr, catch) not in all_pairs or random.randrange(0, 4) == 1):
             r = random.randrange(0, len(belt[catch]))
             all_pairs.add((usr, catch))
             await ctx.reply(belt[catch][r], mention_author=False)
