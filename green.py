@@ -56,7 +56,7 @@ async def on_message(ctx):
     chn = ctx.channel
     usr = ctx.author.id
     for catch in belt:
-        if msg.endswith(catch) and ((usr, catch) not in all_pairs or random.randrange(0, 4) == 1):
+        if msg.endswith(catch) and ((usr, catch) not in all_pairs or random.randrange(0, 4) == 1) and usr != 878285405340966932:
             r = random.randrange(0, len(belt[catch]))
             all_pairs.add((usr, catch))
             await ctx.reply(belt[catch][r], mention_author=False)
