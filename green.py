@@ -62,6 +62,19 @@ async def on_message(ctx):
             await ctx.reply(belt[catch][r], mention_author=False)
     await bot.process_commands(ctx)
 
+@bot.command(brief = "List all song catches you've found")
+async def progress(ctx):
+    s = ""
+    x = 0
+    usr = ctx.author.id
+    for catch in belt:
+        if (usr, catch) in all_pairs:
+            s += catch
+            s += " "
+            x += 1
+    t = "Song triggers found (" + str(x) + "): " + s
+    await ctx.send(t)
+
 @bot.command(brief = "Update the leaderboard")
 async def leaderboard(ctx):
     ip10_api_key = "1b482fd2ed184b92935c4b6f870729bab3358eb8"
