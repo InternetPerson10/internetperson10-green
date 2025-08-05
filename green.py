@@ -51,8 +51,8 @@ async def progress(ctx):
 
 @bot.command(brief = "Update the leaderboard")
 async def leaderboard(ctx):
-    ip10_api_key = "1b482fd2ed184b92935c4b6f870729bab3358eb8"
-    ip10_api_secret = "26a753bd3762a7556b7883325e3c29740c692744"
+    ip10_api_key = "placeholder"
+    ip10_api_secret = "placeholder"
     s = f"contest.status?apiKey={ip10_api_key}&contestId=409027&time={math.floor(time.time())}"
     h = hashlib.new("sha512")
     h.update(f"691337/{s}#{ip10_api_secret}".encode("utf-8"))
