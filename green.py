@@ -379,5 +379,6 @@ async def nus(ctx, mod):
 async def on_ready():
     print('This is {0.user}, hello :D'.format(bot))
 
-bot.run('ODc4Mjg1NDA1MzQwOTY2OTMy.YR-9Bg.QV4LuYM45e36FE-4F7uQKlB6rHo')
-# client.run('ODc4Mjg1NDA1MzQwOTY2OTMy.YR-9Bg.QV4LuYM45e36FE-4F7uQKlB6rHo')
+# put your token here :D
+bot.run()
+# client.run()
